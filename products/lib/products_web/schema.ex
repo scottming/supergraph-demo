@@ -61,6 +61,22 @@ defmodule ProductsWeb.Schema do
         {:ok, %{email: "support@apollographql.com", total_products_created: 1337}}
       end)
     end
+
+    field :_resolve_reference, :product do
+      resolve(fn
+        _, %{id: id}, _ ->
+          {:ok, @products |> Enum.find(&(&1.id == id)) |> Map.put(:__typename, "Product")}
+
+        _, %{package: package, sku: sku}, _ ->
+          {:ok,
+           @products
+           |> Enum.find(&(&1.package == package && &1.sku == sku))
+           |> Map.put(:__typename, "Product")}
+
+        _, %{}, _ ->
+          {:ok, @products |> hd() |> Map.put(:__typename, "Product")}
+      end)
+    end
   end
 
   object :product_variation do

@@ -13,7 +13,6 @@ defmodule UsersWeb.Schema do
 
   query do
     extends()
-    field(:users, list_of(:user), resolve: fn _, _ -> {:ok, @users} end)
   end
 
   object :user do
@@ -21,5 +20,10 @@ defmodule UsersWeb.Schema do
     field(:email, non_null(:id))
     field(:name, :string)
     field(:total_products_created, :integer)
+
+    field :_resolve_reference, :user do
+      resolve(fn _, %{email: email}, _ -> {:ok, @users |> Enum.find(&(&1.email == email))} end)
+    end
   end
 end
+

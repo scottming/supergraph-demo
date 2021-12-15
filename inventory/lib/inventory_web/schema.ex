@@ -8,7 +8,7 @@ defmodule InventoryWeb.Schema do
   ]
 
   query do
-    field(:deliveries, list_of(:delivery_estimates), resolve: fn _, _ -> {:ok, @delivery} end)
+    extends()
   end
 
   object :product do
@@ -41,3 +41,4 @@ defmodule InventoryWeb.Schema do
     field(:fastest_delivery, :string)
   end
 end
+
