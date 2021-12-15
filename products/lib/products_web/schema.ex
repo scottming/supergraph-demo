@@ -1,5 +1,6 @@
 defmodule ProductsWeb.Schema do
   use Absinthe.Schema
+  use Absinthe.Federation.Schema
 
   @products [
     %{
@@ -17,6 +18,8 @@ defmodule ProductsWeb.Schema do
   ]
 
   query do
+    extends()
+
     field :all_products, list_of(:product) do
       resolve(fn _, _, _ -> {:ok, @products} end)
     end
@@ -29,6 +32,7 @@ defmodule ProductsWeb.Schema do
   end
 
   object :product do
+    key_fields(["id", "sku package", "sku variation { id }"])
     field(:id, non_null(:id))
     field(:sku, :string)
     field(:package, :string)
@@ -51,6 +55,8 @@ defmodule ProductsWeb.Schema do
     end
 
     field :created_by, :user do
+      provides_fields("totalProductsCreated")
+
       resolve(fn _, _, _ ->
         {:ok, %{email: "support@apollographql.com", total_products_created: 1337}}
       end)
@@ -67,8 +73,11 @@ defmodule ProductsWeb.Schema do
   end
 
   object :user do
-    field(:email, non_null(:id))
+    extends()
+    key_fields(["email"])
 
-    field(:total_products_created, :integer)
+    field(:email, non_null(:id), do: external())
+
+    field(:total_products_created, :integer, do: external())
   end
 end

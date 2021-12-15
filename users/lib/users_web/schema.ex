@@ -1,5 +1,6 @@
 defmodule UsersWeb.Schema do
   use Absinthe.Schema
+  use Absinthe.Federation.Schema
 
   @users [
     %{
@@ -11,10 +12,12 @@ defmodule UsersWeb.Schema do
   ]
 
   query do
+    extends()
     field(:users, list_of(:user), resolve: fn _, _ -> {:ok, @users} end)
   end
 
   object :user do
+    key_fields("email")
     field(:email, non_null(:id))
     field(:name, :string)
     field(:total_products_created, :integer)
