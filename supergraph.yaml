@@ -1,0 +1,14 @@
+subgraphs:
+  products:
+    routing_url: http://127.0.0.1:4001
+    schema:
+      file: ./subgraphs/products/products.graphql
+  users:
+    routing_url: http://127.0.0.1:4002
+    schema:
+      file: ./subgraphs/users/users.graphql
+  inventory:
+    routing_url: http://127.0.0.1:4003
+    schema:
+      file: ./subgraphs/inventory/inventory.graphql
+
